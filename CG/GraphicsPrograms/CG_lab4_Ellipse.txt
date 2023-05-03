@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <graphics.h>
+#include <stdlib.h>
+
+typedef struct
+{
+    int x;
+    int y;
+} Coordinate;
+
+void drawEllipse(int rX, int rY, int h, int k)
+{
+    int x = 0, y = rY, a = 0, b = 0, i, j;
+    Coordinate ellipseCoords[8][64];
+
+    // For Region 1 and 4-way symmetry through Region 1!
+    int p = rY * rY - rX * rX * rY + (rX * rX) / 4;
+    while (2 * rY * rY * x < 2 * rX * rX * y)
+    {
+        ellipseCoords[0][a] = {.x = x + h, .y = y + k};   // R1
+        ellipseCoords[3][a] = {.x = x + h, .y = -y + k};  // R4
+        ellipseCoords[4][a] = {.x = -x + h, .y = -y + k}; // R5
+        ellipseCoords[7][a] = {.x = -x + h, .y = y + k};  // R8
+        if (p < 0)
+        {
+            p += 2 * rY * rY * (++x) + rY * rY;
+        }
+        else
+        {
+            p += 2 * rY * rY * (++x) - 2 * rX * rX * (--y) + rY * rY;
+        }
+        ++a;
+    };
+
+    // For Region 2 and 4-way symmetry through Region 2!
+    p = (rY * rY) * ((float)x + 1 / 2) * ((float)x + 1 / 2) + (rX * rX) * (y - 1) * (y - 1) - (rX * rX) * (rY * rY);
+    while (y > 0)
+    {
+        ellipseCoords[1][b] = {.x = x + h, .y = y + k};   // R2
+        ellipseCoords[2][b] = {.x = x + h, .y = -y + k};  // R3
+        ellipseCoords[5][b] = {.x = -x + h, .y = -y + k}; // R6
+        ellipseCoords[6][b] = {.x = -x + h, .y = y + k};  // R7
+        if (p > 0)
+        {
+            p += -2 * rX * rX * (--y) + rX * rX;
+        }
+        else
+        {
+            p += 2 * rY * rY * (++x) - 2 * rX * rX * (--y) - rX * rX;
+        }
+        ++b;
+    };
+    for (i = 0; i < 8; i++)
+    {
+        printf("\n\nRegion %d:\n", i + 1);
+        j = 0;
+        if (i == 0 || i == 3 || i == 4 || i == 7)
+        {
+            while (j < a)
+            {
+                x = ellipseCoords[i][j].x, y = ellipseCoords[i][j].y;
+                putpixel(x, y, WHITE);
+                printf("(%d, %d)\n", x, y);
+                j++;
+            }
+        }
+        else
+        {
+            while (j < b)
+            {
+                x = ellipseCoords[i][j].x, y = ellipseCoords[i][j].y;
+                putpixel(x, y, WHITE);
+                printf("(%d, %d)\n", x, y);
+                j++;
+            }
+        }
+    }
+}
+
+int main()
+{
+    int graphicsDriver = DETECT, graphicsMode;
+    int rX, rY, h, k;
+    printf("Enter the radius rX and rY of ellipse: ");
+    scanf("%d %d", &rX, &rY);
+    printf("Enter the center of ellipse: ");
+    scanf("%d %d", &h, &k);
+    initgraph(&graphicsDriver, &graphicsMode, (char *)"");
+    drawEllipse(rX, rY, h, k);
+    printf("\n");
+    getch();
+    closegraph();
+    return 0x1337;
+}

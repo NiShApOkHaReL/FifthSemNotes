@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <graphics.h>
+#include <stdlib.h>
+#define SIDES 4
+
+void drawPolygon(int points[][2])
+{
+  int i;
+  for (i = 0; i < SIDES; i++)
+    line(points[i][0], points[i][1], points[(i + 1) % SIDES][0], points[(i + 1) % SIDES][1]);
+}
+
+void shearRectangle(int rectPoints[][2], int sh[])
+{
+  char original[32] = "Original";
+  char shearedx[32] = "Sheared (x-axis)";
+  char shearedy[32] = "Sheared (y-axis)";
+  char shearedxy[32] = "Sheared (xy-axis)";
+  char text[128];
+  int i;
+  int xrect[SIDES][2] = {0}, yrect[SIDES][2] = {0}, arbrect[SIDES][2] = {0};
+
+  settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 2);
+
+  // Original
+  setcolor(CYAN);
+  outtextxy(64, 20, original);
+  drawPolygon(rectPoints);
+
+  // Sheared (x-axis)
+  setcolor(LIGHTMAGENTA);
+  for (i = 0; i < SIDES; i++)
+  {
+    xrect[i][0] = rectPoints[i][0] + sh[0] * rectPoints[i][1];
+    xrect[i][1] = rectPoints[i][1];
+  }
+  outtextxy(192, 20, shearedx);
+  drawPolygon(xrect);
+
+  // Sheared (y-axis)
+  setcolor(MAGENTA);
+  for (i = 0; i < SIDES; i++)
+  {
+    yrect[i][0] = rectPoints[i][0];
+    yrect[i][1] = rectPoints[i][1] + sh[1] * rectPoints[i][0];
+  }
+  outtextxy(384, 20, shearedy);
+  drawPolygon(yrect);
+
+  // Sheared (Arbitrary)
+  setcolor(LIGHTRED);
+  for (i = 0; i < SIDES; i++)
+  {
+    arbrect[i][0] = rectPoints[i][0] + sh[0] * rectPoints[i][1];
+    arbrect[i][1] = rectPoints[i][1] + sh[1] * rectPoints[i][0];
+  }
+  outtextxy(600, 20, shearedxy);
+  drawPolygon(arbrect);
+}
+
+int main()
+{
+  int graphicsDriver = DETECT, graphicsMode;
+  initwindow(1366, 1080);
+  int left = 50, top = 100, right = 120, bottom = 200;
+  int rectPoints[][2] = {{left, top}, {right, top}, {right, bottom}, {left, bottom}};
+  int sh[] = {3, 2};
+  shearRectangle(rectPoints, sh);
+  printf("\n");
+  getch();
+  closegraph();
+  return 0x1337;
+}

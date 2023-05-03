@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <graphics.h>
+#include <stdlib.h>
+#include <math.h>
+#define getCosine(a) cos(a * 3.14159265358979323846264 / 180)
+#define getSine(a) sin(a * 3.14159265358979323846264 / 180)
+
+int roundNow(float x)
+{
+  if ((x - (int)x) >= 0.5)
+    return (int)x + 1;
+  else
+    return (int)x;
+}
+
+int rotateX(int x, int y, int pivotX, int pivotY, int angle)
+{
+  return (pivotX + roundNow((x - pivotX) * getCosine(angle)) - roundNow((y - pivotY) * getSine(angle)));
+}
+
+int rotateY(int x, int y, int pivotX, int pivotY, int angle)
+{
+  return (pivotY + roundNow((x - pivotX) * getSine(angle)) + roundNow((y - pivotY) * getCosine(angle)));
+}
+
+void rotateLine(int a[], int b[], int rf[])
+{
+  char original[32] = "Original Line:";
+  char rotated[32] = "Rotated Line:";
+  char factor[32] = "Rotation Factor:";
+  char text[32];
+
+  // Displaying plot data
+  settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 24);
+  outtextxy(64, 20, original);
+  sprintf(text, "A(%d, %d) to B(%d, %d)", a[0], a[1], b[0], b[1]);
+  outtextxy(64, 52, text);
+
+  outtextxy(64, 96, rotated);
+  sprintf(text, "A(%d, %d) to B(%d, %d)", rotateX(a[0], a[1], rf[0], rf[1], rf[2]), rotateY(a[0], a[1], rf[0], rf[1], rf[2]), rotateX(b[0], b[1], rf[0], rf[1], rf[2]), rotateY(b[0], b[1], rf[0], rf[1], rf[2]));
+  outtextxy(64, 128, text);
+
+  outtextxy(64, 172, factor);
+  sprintf(text, "x-pivot: %d | y-pivot: %d | Angle: %d degrees", rf[0], rf[1], rf[2]);
+  outtextxy(64, 200, text);
+
+  // Original Line
+  setcolor(CYAN);
+  line(a[0], a[1], b[0], b[1]);
+
+  // Rotated Line
+  setcolor(MAGENTA);
+  line(rotateX(a[0], a[1], rf[0], rf[1], rf[2]), rotateY(a[0], a[1], rf[0], rf[1], rf[2]), rotateX(b[0], b[1], rf[0], rf[1], rf[2]), rotateY(b[0], b[1], rf[0], rf[1], rf[2]));
+}
+
+int main()
+{
+  int graphicsDriver = DETECT, graphicsMode;
+  initwindow(1280, 720);
+  int a[] = {400, 250}, b[] = {720, 600};
+  int rf[] = {600, 400, 60};
+  rotateLine(a, b, rf);
+  printf("\n");
+  getch();
+  closegraph();
+  return 0x1337;
+}

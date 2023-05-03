@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <graphics.h>
+#include <stdlib.h>
+
+void scalePoint(int sm[][2], int coords[][1])
+{
+  int temp[2][1] = {0};
+
+  for (int i = 0; i < 2; i++)
+    for (int j = 0; j < 1; j++)
+      for (int k = 0; k < 2; k++)
+        temp[i][j] += (sm[i][k] * coords[k][j]);
+
+  coords[0][0] = temp[0][0];
+  coords[1][0] = temp[1][0];
+}
+
+void scaleSector(int x, int y, int stangle, int endangle, int xradius, int yradius, int sm[][2])
+{
+  int coords[2][1];
+  coords[0][0] = x;
+  coords[1][0] = y;
+  scalePoint(sm, coords);
+
+  char original[32] = "Original Sector:";
+  char scaled[32] = "Scaled Sector:";
+  char text[128];
+
+  // Displaying plot data
+  settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 24);
+  outtextxy(64, 20, original);
+  sprintf(text, "x: %d, y: %d, Start Angle: %d, End Angle: %d, x-radius: %d, y-radius: %d", x, y, stangle, endangle, xradius, yradius);
+  outtextxy(64, 52, text);
+
+  outtextxy(64, 128, scaled);
+  sprintf(text, "x: %d, y: %d, Start Angle: %d, End Angle: %d, x-radius: %d, y-radius: %d", coords[0][0], coords[1][0], stangle, endangle, xradius * sm[0][0], yradius * sm[1][1]);
+  outtextxy(64, 160, text);
+
+  // Original Sector
+  setfillstyle(8, CYAN);
+  sector(x, y, stangle, endangle, xradius, yradius);
+
+  // Scaled Sector
+  setfillstyle(8, MAGENTA);
+  sector(coords[0][0], coords[1][0], stangle, endangle, xradius * sm[0][0], yradius * sm[1][1]);
+}
+
+int main()
+{
+  int graphicsDriver = DETECT, graphicsMode;
+  initwindow(1280, 720);
+  int x = 256, y = 320, stangle = 15, endangle = 150, xradius = 50, yradius = 65;
+  int sm[2][2] = {{2, 0}, {0, 2}};
+  scaleSector(x, y, stangle, endangle, xradius, yradius, sm);
+  printf("\n");
+  getch();
+  closegraph();
+  return 0x1337;
+}

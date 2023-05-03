@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <graphics.h>
+#include <math.h>
+#include <conio.h>
+
+int roundNow(float x){
+    if((x-(int)x)>=0.5) return (int)x+1;
+    else return (int)x;
+}
+
+void drawLine(int a, int b, int c, int d){
+    float x=a,y=b;
+    int dx=(c-a), dy=(d-b);
+    float m=dy/(float)dx;
+    if(fabs(m)<1){
+	while(x<=c){
+	   putpixel(roundNow(x),roundNow(y),RED);
+	   printf("%d, %d\n", roundNow(x), roundNow(y));
+	    x+=1;
+	    y+=m;
+	}
+    } else if(fabs(m)>1) {
+	while(y<=d){
+	    putpixel(roundNow(x),roundNow(y),RED);
+	    printf("%d, %d\n", roundNow(x), roundNow(y));
+	    x+=1/m;
+	    y+=1;
+
+	}
+    } else {
+	while(y<=d || x<=c){
+	    putpixel(roundNow(x),roundNow(y),RED);
+	    //printf("%d, %d\n", roundNow(x), roundNow(y));
+	    x+=1;
+	    y+=1;
+		}
+    }
+
+}
+
+int main()
+{
+    int graphicsDriver=DETECT, graphicsMode;
+    int a,b,c,d;
+    //clrscr();
+    printf("Enter starting points: ");
+    scanf("%d %d", &a,&b);
+    printf("Enter ending points: ");
+    scanf("%d %d", &c,&d);
+    initgraph(&graphicsDriver, &graphicsMode, "C:\\TURBOC3\\BGI");
+    drawLine(a,b,c,d);
+    getch();
+    closegraph();
+    return 0x1337;
+}

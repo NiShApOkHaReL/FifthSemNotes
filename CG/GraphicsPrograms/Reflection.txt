@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <graphics.h>
+#include <stdlib.h>
+
+void reflectTriangle(int a[], int b[], int c[])
+{
+  // Generating the graph
+  line(getmaxx() / 2, 0, getmaxx() / 2, getmaxy());
+  line(0, getmaxy() / 2, getmaxx(), getmaxy() / 2);
+
+  char initial[32] = "Initial Triangle";
+  char origin[32] = "Reflection across origin";
+  char xaxis[32] = "Reflection across x-axis";
+  char yaxis[32] = "Reflection across y-axis";
+  char text[256];
+
+  // Displaying plot data
+  settextstyle(SANS_SERIF_FONT, HORIZ_DIR, 24);
+  outtextxy(getmaxx() / 8, 50, initial);
+  sprintf(text, "A(%d,%d) | B(%d,%d) | C(%d,%d)", a[0], a[1], b[0], b[1], c[0], c[1]);
+  outtextxy(getmaxx() / 2 - getmaxx() / 4, getmaxy() / 2 - getmaxy() / 16, text);
+
+  outtextxy(getmaxx() / 2 + getmaxx() / 4, getmaxy() - 50, origin);
+  sprintf(text, "A(%d,%d) | B(%d,%d) | C(%d,%d)", getmaxx() - a[0], getmaxy() - a[1], getmaxx() - b[0], getmaxy() - b[1], getmaxx() - c[0], getmaxy() - c[1]);
+  outtextxy(getmaxx() / 2 + getmaxx() / 8, getmaxy() / 2 + getmaxy() / 32, text);
+
+  outtextxy(getmaxx() / 8, getmaxy() - 50, xaxis);
+  sprintf(text, "A(%d,%d) | B(%d,%d) | C(%d,%d)", a[0], getmaxy() - a[1], b[0], getmaxy() - b[1], c[0], getmaxy() - c[1]);
+  outtextxy(getmaxx() / 2 - getmaxx() / 4, getmaxy() / 2 + getmaxy() / 32, text);
+
+  outtextxy(getmaxx() / 2 + getmaxx() / 4, 50, yaxis);
+  sprintf(text, "A(%d,%d) | B(%d,%d) | C(%d,%d)", getmaxx() - a[0], a[1], getmaxx() - b[0], b[1], getmaxx() - c[0], c[1]);
+  outtextxy(getmaxx() / 2 + getmaxx() / 8, getmaxy() / 2 - getmaxy() / 16, text);
+
+  // Initial Triangle (Second Quadrant)
+  setcolor(WHITE);
+  line(a[0], a[1], b[0], b[1]);
+  line(b[0], b[1], c[0], c[1]);
+  line(c[0], c[1], a[0], a[1]);
+
+  // Reflection along origin (Fourth Quadrant)
+  setcolor(GREEN);
+  line(getmaxx() - a[0], getmaxy() - a[1], getmaxx() - b[0], getmaxy() - b[1]);
+  line(getmaxx() - b[0], getmaxy() - b[1], getmaxx() - c[0], getmaxy() - c[1]);
+  line(getmaxx() - c[0], getmaxy() - c[1], getmaxx() - a[0], getmaxy() - a[1]);
+
+  // Reflection along x-axis (Third Quadrant)
+  setcolor(CYAN);
+  line(a[0], getmaxy() - a[1], b[0], getmaxy() - b[1]);
+  line(b[0], getmaxy() - b[1], c[0], getmaxy() - c[1]);
+  line(c[0], getmaxy() - c[1], a[0], getmaxy() - a[1]);
+
+  // Reflection along y-axis (First Quadrant)
+  setcolor(MAGENTA);
+  line(getmaxx() - a[0], a[1], getmaxx() - b[0], b[1]);
+  line(getmaxx() - b[0], b[1], getmaxx() - c[0], c[1]);
+  line(getmaxx() - c[0], c[1], getmaxx() - a[0], a[1]);
+}
+
+int main()
+{
+  int graphicsDriver = DETECT, graphicsMode;
+  initwindow(1366, 768);
+  int a[] = {400, 100}, b[] = {500, 320}, c[] = {320, 200};
+  reflectTriangle(a, b, c);
+  printf("\n");
+  getch();
+  closegraph();
+  return 0x1337;
+}

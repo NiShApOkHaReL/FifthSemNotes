@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <graphics.h>
+#include <math.h>
+
+// x -> Starting Point, y -> Ending Point, v -> Current Point
+bool condition(int x, int y, int v)
+{
+    if (x < y)
+        return v <= y;
+    else
+        return v >= y;
+}
+
+void drawLine(int a, int b, int c, int d)
+{
+    int x = a, y = b;
+    int dx = (c - a), dy = (d - b);
+    float m = dy / (float)dx;
+    int p;
+
+    if (fabs(m) < 1)
+    {
+        p = 2 * fabs(dy) - fabs(dx);
+        while (condition(a, c, x))
+        {
+            putpixel(x, y, WHITE);
+            printf("(%d, %d)\n", x, y);
+            if (x > c)
+                x--;
+            else if (x < c)
+                x++;
+            else
+                break;
+            if (p < 0)
+            {
+                p += 2 * fabs(dy);
+            }
+            else
+            {
+                if (y < d)
+                    y++;
+                else if (y > d)
+                    y--;
+                p += 2 * fabs(dy) - 2 * fabs(dx);
+            }
+        }
+    }
+    else
+    {
+        p = 2 * fabs(dx) - fabs(dy);
+        while (condition(b, d, y))
+        {
+            putpixel(x, y, WHITE);
+            printf("(%d, %d)\n", x, y);
+            if (y > d)
+                y--;
+            else if (y < d)
+                y++;
+            else
+                break;
+            if (p < 0)
+            {
+                p += 2 * fabs(dx);
+            }
+            else
+            {
+                if (x < c)
+                    x++;
+                else if (x > c)
+                    x--;
+                p += 2 * fabs(dx) - 2 * fabs(dy);
+            }
+        }
+    }
+}
+
+int main()
+{
+    int graphicsDriver = DETECT, graphicsMode;
+    int a, b, c, d;
+    printf("Enter starting points: ");
+    scanf("%d %d", &a, &b);
+    printf("Enter ending points: ");
+    scanf("%d %d", &c, &d);
+    printf("\n");
+    initgraph(&graphicsDriver, &graphicsMode, (char *)"");
+    drawLine(a, b, c, d);
+    printf("\n");
+    getch();
+    closegraph();
+    return 0x1337;
+}
