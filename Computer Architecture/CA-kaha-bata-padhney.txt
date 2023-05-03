@@ -1,0 +1,11 @@
+Interconnected structure in multiprocessor=>Computer-Organization-Notes-Full.pdf,Pg.no=>83
+
+hardware and software performance issues=>chapter10.pdf(CA notes)
+
+Multicore organization, Dual core and quad core=>chapter10(pukar sir)
+
+Interconnection Structures=>fullnote.pdf(pukar sir)(page 84)
+
+cache coherence=>fullnote(page no. 91)
+
+Types of registers=>unit-3(pg.no-3)
